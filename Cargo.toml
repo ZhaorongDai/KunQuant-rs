@@ -1,0 +1,25 @@
+[package]
+name = "kunquant_rs"
+version = "0.2.1"
+edition = "2024"
+authors = ["ZhaorongDai"]
+keywords = ["finance", "quant", "trading", "factors", "rust"]
+categories = ["api-bindings"]
+description = "Rust bindings for KunQuant financial factor computation library"
+license = "MIT"
+repository = "https://github.com/ZhaorongDai/KunQuant_rust_api"
+
+[lib]
+name = "kunquant_rs"
+path = "src/lib.rs"
+
+[dependencies]
+libc = "0.2"
+thiserror = "2.0.12"
+
+[build-dependencies]
+cc = "1.0"
+
+[dev-dependencies]
+rand = "0.8"
+ndarray = "0.15"
