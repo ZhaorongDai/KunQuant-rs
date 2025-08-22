@@ -98,15 +98,6 @@ pub enum KunQuantError {
     #[error("Invalid buffer name: {name}")]
     InvalidBufferName { name: String },
 
-    /// The number of stocks is not a multiple of 8, which is required for SIMD optimization.
-    ///
-    /// KunQuant uses SIMD (Single Instruction, Multiple Data) instructions for
-    /// performance optimization, which requires the stock count to be divisible by 8.
-    ///
-    /// **Solution:** Use a stock count that is a multiple of 8 (e.g., 8, 16, 24, 32, ...).
-    #[error("Invalid number of stocks: {num_stocks}. Must be a multiple of 8")]
-    InvalidStockCount { num_stocks: usize },
-
     /// Buffer size doesn't match the expected dimensions for the computation.
     ///
     /// This error occurs when the provided buffer size doesn't match the
@@ -127,7 +118,6 @@ pub enum KunQuantError {
     ///
     /// **Common Causes:**
     /// - Module not compiled with `output_layout="STREAM"`
-    /// - Invalid number of stocks (not multiple of 8)
     /// - Insufficient memory for streaming buffers
     /// - Incompatible module and executor combination
     #[error("Stream context creation failed")]
