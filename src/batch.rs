@@ -41,7 +41,7 @@ impl BatchParams {
     ///
     /// # Arguments
     ///
-    /// * `num_stocks` - Number of stocks to process (must be multiple of 8)
+    /// * `num_stocks` - Number of stocks to process
     /// * `total_time` - Total number of time points in input data
     /// * `cur_time` - Starting time index for computation (0-based)
     /// * `length` - Number of consecutive time points to compute
@@ -49,7 +49,6 @@ impl BatchParams {
     /// # Returns
     ///
     /// Returns `Ok(BatchParams)` on success, or an error if:
-    /// - `num_stocks` is not a multiple of 8
     /// - `cur_time + length > total_time` (time window exceeds data bounds)
     /// - Any parameter is invalid
     ///
@@ -65,17 +64,9 @@ impl BatchParams {
     /// // Process 8 stocks, compute only the last 20 time points
     /// let params = BatchParams::new(8, 252, 232, 20)?;
     ///
-    /// // This would fail - stock count not multiple of 8
-    /// // let invalid = BatchParams::new(10, 100, 0, 100)?; // Error!
     /// # Ok(())
     /// # }
     /// ```
-    ///
-    /// # Performance Notes
-    ///
-    /// - Larger `num_stocks` values (multiples of 8) enable better SIMD utilization
-    /// - Smaller `length` values reduce memory usage and computation time
-    /// - `cur_time` and `length` allow processing data in chunks for memory efficiency
     pub fn new(
         num_stocks: usize,
         total_time: usize,
@@ -192,7 +183,6 @@ impl BatchParams {
 ///
 /// - Computation is CPU-intensive and benefits from multi-threading
 /// - Memory usage scales with `num_stocks * total_time * sizeof(f32)`
-/// - SIMD optimizations require `num_stocks` to be a multiple of 8
 /// - Consider processing data in chunks for very large datasets
 pub fn run_graph(
     executor: &Executor,
@@ -223,10 +213,6 @@ mod tests {
         // Valid parameters
         assert!(BatchParams::new(8, 100, 0, 100).is_ok());
         assert!(BatchParams::new(16, 100, 10, 50).is_ok());
-
-        // Invalid stock count (not multiple of 8)
-        // assert!(BatchParams::new(7, 100, 0, 100).is_err());
-        // assert!(BatchParams::new(15, 100, 0, 100).is_err());
     }
 
     #[test]
@@ -236,5 +222,11 @@ mod tests {
         assert_eq!(params.total_time, 500);
         assert_eq!(params.cur_time, 0);
         assert_eq!(params.length, 500);
+    }
+
+    #[test]
+    fn test_unaligned_params() {
+        assert!(BatchParams::new(7, 100, 0, 100).is_ok());
+        assert!(BatchParams::new(15, 100, 0, 100).is_ok());
     }
 }

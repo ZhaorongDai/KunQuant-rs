@@ -42,7 +42,7 @@ impl<'a> StreamContext<'a> {
     ///
     /// * `executor` - Reference to the KunQuant executor that will run the computations
     /// * `module` - Reference to the compiled factor module containing the computation graph
-    /// * `num_stocks` - Number of stocks to process (must be a multiple of 8 for SIMD optimization)
+    /// * `num_stocks` - Number of stocks to process
     ///
     /// # Returns
     ///
@@ -50,7 +50,6 @@ impl<'a> StreamContext<'a> {
     /// - The executor handle is invalid
     /// - The module handle is invalid
     /// - The streaming context creation fails in the C library
-    /// - `num_stocks` is not a multiple of 8
     ///
     /// # Examples
     ///
@@ -67,17 +66,7 @@ impl<'a> StreamContext<'a> {
     /// # Ok(())
     /// # }
     /// ```
-    ///
-    /// # Performance Notes
-    ///
-    /// - Buffer handles are cached internally for optimal performance
-    /// - The context reuses memory buffers across multiple time steps
-    /// - SIMD optimizations require `num_stocks` to be a multiple of 8
     pub fn new(executor: &'a Executor, module: &'a Module<'a>, num_stocks: usize) -> Result<Self> {
-        if num_stocks % 8 != 0 {
-            return Err(KunQuantError::InvalidStockCount { num_stocks });
-        }
-
         let handle =
             unsafe { ffi::kunCreateStream(executor.handle(), module.handle(), num_stocks) };
 
@@ -366,7 +355,6 @@ impl<'a> StreamContext<'a> {
     ///
     /// - All input data arrays must have exactly this length
     /// - All output data arrays will have exactly this length
-    /// - For optimal SIMD performance, this should be a multiple of 8
     /// - The value is immutable for the lifetime of the context
     pub fn num_stocks(&self) -> usize {
         self.num_stocks

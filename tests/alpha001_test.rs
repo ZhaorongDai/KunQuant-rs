@@ -43,9 +43,6 @@ fn generate_stock_data() -> (Vec<f32>, Vec<f32>, Vec<f32>, Vec<f32>, Vec<f32>, V
 fn test_alpha001_factor() -> Result<()> {
     // Check if test library exists
     let lib_path = "test_libs/alpha001_lib.so";
-    if !Path::new(lib_path).exists() {
-        panic!("Alpha001 library not found. Please run 'python generate_test_factor.py' first");
-    }
 
     // Create executor and load library
     let executor = Executor::single_thread()?;
