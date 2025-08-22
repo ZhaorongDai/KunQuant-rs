@@ -1,6 +1,6 @@
 # KunQuant-rs
 [![Crates.io](https://img.shields.io/crates/v/kunquant_rs)](https://crates.io/crates/kunquant_rs)
-[![Documentation](https://docs.rs/kunquant_rs/badge.svg)](https://docs.rs/kunquant_rs/0.2.1/kunquant_rs/)
+[![Documentation](https://docs.rs/kunquant_rs/badge.svg)](https://docs.rs/kunquant_rs/)
 
 Rust bindings for the KunQuant financial factor computation library.
 
