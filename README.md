@@ -117,7 +117,6 @@ The library follows a layered architecture:
 - Zero-cost abstractions over the C API
 - Efficient buffer management with minimal copying
 - Multi-threading support for parallel computation
-- Stock count must be a multiple of 8 for optimal SIMD performance
 
 ## Limitations
 
